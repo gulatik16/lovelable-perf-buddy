@@ -254,7 +254,7 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
       simulateTyping(() => {
         addMessage({
           type: "bot",
-          content: `📋 **Review Analysis Complete!**\n\n🎉 I've successfully generated a comprehensive performance review draft for ${selectedEmployee}.\n\nThe review includes:\n✅ **Key Achievements** - Major accomplishments and deliverables\n✅ **Collaboration & Communication** - Team interaction analysis\n✅ **Growth Areas & Development** - Recommendations for improvement\n\n📊 **Data Sources**: 90 days of activity from Slack, Jira, GitHub, and Notion\n🤖 **AI Confidence**: 94% accuracy\n\nYour draft is ready for review and editing!`,
+          content: `📋 **Performance Review Draft Complete**\n\n👤 **Employee: ${selectedEmployee}**\n\n🎉 I've successfully generated a comprehensive performance review draft.\n\nThe review includes:\n✅ **Key Achievements** - Major accomplishments and deliverables\n✅ **Collaboration & Communication** - Team interaction analysis\n✅ **Growth Areas & Development** - Recommendations for improvement\n\n📊 **Data Sources**: 90 days of activity from connected tools\n🤖 **AI Confidence**: 94% accuracy\n\nYour draft is ready for review and editing!`,
           buttons: [
             { text: "View & Edit Draft", action: "view_draft", variant: "default" },
             { text: "Generate New Draft", action: "regenerate", variant: "outline" }
@@ -345,7 +345,24 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
         handleSelectEmployee();
         break;
       case "connect_additional_tools":
-        handleConnectTools();
+        // Store current employee and connect tools, then continue with that employee
+        simulateTyping(() => {
+          addMessage({
+            type: "bot",
+            content: "Great! Let's connect additional tools to enhance the analysis for " + selectedEmployee + ".\n\nClick on each tool to connect:",
+            integrations: [
+              { name: "Notion", status: "pending", icon: "📝" },
+              { name: "Google Docs", status: "pending", icon: "📄" },
+              { name: "Linear", status: "pending", icon: "🔄" },
+              { name: "Asana", status: "pending", icon: "✅" }
+            ],
+            buttons: [
+              { text: "Connect Notion", action: "connect_notion", variant: "default" },
+              { text: "Connect Google Docs", action: "connect_google_docs", variant: "outline" },
+              { text: "Continue with " + selectedEmployee, action: "continue_with_employee", variant: "secondary" }
+            ]
+          });
+        });
         break;
       case "proceed_analysis":
         addMessage({
@@ -361,6 +378,51 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
             { text: "Generate Review", action: "generate_review", variant: "default" }
           ]
         });
+        break;
+      case "connect_notion":
+        handleConnectIntegration("notion");
+        setTimeout(() => {
+          addMessage({
+            type: "bot",
+            content: `Excellent! Now I have even more comprehensive data for ${selectedEmployee}. Ready to proceed with the enhanced analysis?`,
+            buttons: [
+              { text: "Continue Analysis", action: "continue_with_employee", variant: "default" }
+            ]
+          });
+        }, 2000);
+        break;
+      case "connect_google_docs":
+        handleConnectIntegration("google_docs");
+        setTimeout(() => {
+          addMessage({
+            type: "bot",
+            content: `Great! Google Docs connected. I can now analyze documentation and written contributions for ${selectedEmployee}. Ready to continue?`,
+            buttons: [
+              { text: "Continue Analysis", action: "continue_with_employee", variant: "default" }
+            ]
+          });
+        }, 2000);
+        break;
+      case "continue_with_employee":
+        simulateTyping(() => {
+          addMessage({
+            type: "bot",
+            content: `Continuing enhanced analysis for ${selectedEmployee} with all connected tools...\n\n🔍 Re-analyzing with additional data sources...\n📊 Processing expanded metrics...\n\nThis will provide even deeper insights...`,
+          });
+        });
+        
+        setTimeout(() => {
+          simulateTyping(() => {
+            addMessage({
+              type: "bot",
+              content: `🎉 Enhanced analysis complete for ${selectedEmployee}!\n\n📈 **Updated Key Metrics (90 days):**\n• 47 commits to GitHub\n• 23 Jira tickets completed\n• 156 Slack messages\n• 15 Notion documents created\n• 8 Google Docs collaborated on\n• 12 code reviews participated\n• 8 meetings led\n\n🌟 **Enhanced Strengths Identified:**\n• Consistent code quality\n• Strong collaboration\n• Excellent documentation skills\n• Proactive communication\n• Cross-functional leadership\n\nReady to generate the comprehensive review?`,
+              buttons: [
+                { text: "Generate Review", action: "generate_review", variant: "default" },
+                { text: "View Detailed Signals", action: "view_signals", variant: "outline" }
+              ]
+            });
+          }, 3000);
+        }, 4000);
         break;
       default:
         console.log("Unknown action:", action);
@@ -397,9 +459,9 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
     <div className="h-screen flex bg-chat-bg">
       <Sidebar currentStep={currentStep} integrations={integrations} />
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col h-full">
         {/* Chat Header */}
-        <div className="bg-background border-b px-6 py-4 flex items-center justify-between">
+        <div className="bg-background border-b px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-bot rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">RG</span>
@@ -416,7 +478,7 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message) => (
             <ChatMessage
               key={message.id}
@@ -428,7 +490,7 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
         </div>
 
         {/* Input */}
-        <div className="shrink-0">
+        <div className="shrink-0 p-4 pt-0">
           <ChatInput 
             onSendMessage={handleSendMessage}
             disabled={isTyping}
