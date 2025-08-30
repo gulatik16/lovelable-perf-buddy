@@ -6,6 +6,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { CheckCircle, ExternalLink, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+interface IntegrationSetupProps {
+  onComplete: () => void;
+}
+
 interface Integration {
   id: string;
   name: string;
@@ -50,7 +54,7 @@ const integrations: Integration[] = [
   }
 ];
 
-export const IntegrationSetup = () => {
+export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
   const [integrationStates, setIntegrationStates] = useState<Integration[]>(integrations);
   const [currentStep, setCurrentStep] = useState("intro");
   const { toast } = useToast();
@@ -269,6 +273,7 @@ export const IntegrationSetup = () => {
                 </p>
                 <Button 
                   size="lg"
+                  onClick={onComplete}
                   className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
                 >
                   Start Creating Reviews →

@@ -17,7 +17,11 @@ const initialMessages: Message[] = [
   }
 ];
 
-export const ReviewGenieBot = () => {
+interface ReviewGenieBotProps {
+  onShowReviewDraft: (employeeName: string) => void;
+}
+
+export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [currentStep, setCurrentStep] = useState("welcome");
   const [integrations, setIntegrations] = useState<Array<{
@@ -27,6 +31,7 @@ export const ReviewGenieBot = () => {
   }>>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const { toast } = useToast();
 
   const scrollToBottom = () => {
@@ -156,6 +161,7 @@ export const ReviewGenieBot = () => {
   };
 
   const handleSelectSpecificEmployee = (employee: string) => {
+    setSelectedEmployee(employee);
     setCurrentStep("signals");
     
     simulateTyping(() => {
@@ -194,15 +200,14 @@ export const ReviewGenieBot = () => {
       simulateTyping(() => {
         addMessage({
           type: "bot",
-          content: `📋 **Performance Review Draft - Sarah Johnson**\n\n**Overall Rating: Exceeds Expectations**\n\n**Technical Excellence:**\nSarah has demonstrated exceptional technical skills with 47 quality commits and a 95% code review approval rate. Her code is well-documented and follows best practices.\n\n**Collaboration & Communication:**\nExcellent team player with proactive communication (156 Slack messages, 12 code reviews). Consistently helpful to colleagues and contributes to team discussions.\n\n**Project Management:**\nCompleted 23 Jira tickets on time with zero blockers. Shows strong planning and execution skills.\n\n**Areas for Growth:**\n• Consider taking on mentorship opportunities\n• Explore leading larger technical initiatives\n\n**Recommendations:**\n• Promote to Senior Developer level\n• Assign as technical lead for Q2 project`,
+          content: `📋 **Review Analysis Complete!**\n\n🎉 I've successfully generated a comprehensive performance review draft for ${selectedEmployee}.\n\nThe review includes:\n✅ **Key Achievements** - Major accomplishments and deliverables\n✅ **Collaboration & Communication** - Team interaction analysis\n✅ **Growth Areas & Development** - Recommendations for improvement\n\n📊 **Data Sources**: 90 days of activity from Slack, Jira, GitHub, and Notion\n🤖 **AI Confidence**: 94% accuracy\n\nYour draft is ready for review and editing!`,
           buttons: [
-            { text: "Export Review", action: "export_review", variant: "default" },
-            { text: "Edit Draft", action: "edit_review", variant: "outline" },
-            { text: "Generate Another", action: "new_review", variant: "secondary" }
+            { text: "View & Edit Draft", action: "view_draft", variant: "default" },
+            { text: "Generate New Draft", action: "regenerate", variant: "outline" }
           ]
         });
       }, 3000);
-    }, 3000);
+    }, 4000);
   };
 
   const handleButtonClick = (action: string) => {
@@ -240,6 +245,9 @@ export const ReviewGenieBot = () => {
       case "select_alex":
         handleSelectSpecificEmployee("Alex Rivera");
         break;
+      case "view_draft":
+        onShowReviewDraft(selectedEmployee);
+        break;
       case "generate_review":
         handleGenerateReview();
         break;
@@ -249,6 +257,9 @@ export const ReviewGenieBot = () => {
           description: "Performance review has been exported to Google Docs and shared with HR.",
         });
         setCurrentStep("finalize");
+        break;
+      case "edit_review":
+        onShowReviewDraft(selectedEmployee);
         break;
       case "new_review":
         setCurrentStep("employee");
