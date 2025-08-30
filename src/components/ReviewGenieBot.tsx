@@ -8,10 +8,10 @@ const initialMessages: Message[] = [
   {
     id: "1",
     type: "bot",
-    content: "👋 Hello! I'm ReviewGenie, your AI-powered performance review assistant.\n\nI can see you have tools connected and I'm analyzing your work signals to create your performance review draft.\n\nLet me gather your achievements and contributions from the past 90 days...",
+    content: "👋 Hello! I'm ReviewGenie, your AI-powered performance review assistant for managers.\n\nI can see you have successfully connected your workplace tools. Now I can help you analyze performance data for employees who have submitted their review drafts.\n\nLet me show you which employees have submitted their reviews and are ready for your detailed analysis...",
     timestamp: new Date(),
     buttons: [
-      { text: "🔍 Analyze My Work", action: "analyze_work", variant: "default" }
+      { text: "👥 View Employee Submissions", action: "view_submissions", variant: "default" }
     ]
   }
 ];
@@ -27,7 +27,11 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
     name: string;
     status: "connected" | "pending" | "error";
     icon: string;
-  }>>([]);
+  }>>([
+    { name: "Slack", status: "connected", icon: "💬" },
+    { name: "Jira", status: "connected", icon: "🎯" },
+    { name: "GitHub", status: "connected", icon: "⚡" }
+  ]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
@@ -142,6 +146,22 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
     }, 1500);
   };
 
+  const handleViewSubmissions = () => {
+    setCurrentStep("employee");
+    
+    simulateTyping(() => {
+      addMessage({
+        type: "bot",
+        content: "📋 **Employee Review Submissions**\n\nHere are the employees who have submitted their performance review drafts and are ready for your detailed analysis:\n\n✅ **Ready for Review:**",
+        buttons: [
+          { text: "Sarah Johnson (Developer) - Submitted 2 days ago", action: "select_sarah", variant: "default" },
+          { text: "Mike Chen (Designer) - Submitted 1 day ago", action: "select_mike", variant: "default" },
+          { text: "Alex Rivera (Product Manager) - Submitted today", action: "select_alex", variant: "default" }
+        ]
+      });
+    });
+  };
+
   const handleSelectEmployee = () => {
     setCurrentStep("employee");
     
@@ -211,6 +231,9 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
 
   const handleButtonClick = (action: string) => {
     switch (action) {
+      case "view_submissions":
+        handleViewSubmissions();
+        break;
       case "analyze_work":
         setCurrentStep("analyzing");
         simulateTyping(() => {
