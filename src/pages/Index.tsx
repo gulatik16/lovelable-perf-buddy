@@ -7,12 +7,21 @@ import { ReviewCycle } from "@/types/ReviewCycle";
 
 type ViewType = "integration" | "chat" | "review" | "hr_dashboard";
 
+interface Integration {
+  id: string;
+  name: string;
+  icon: string;
+  status: "disconnected" | "connecting" | "connected";
+}
+
 const Index = () => {
   const [currentView, setCurrentView] = useState<ViewType>("integration");
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [reviewCycle, setReviewCycle] = useState<ReviewCycle | null>(null);
+  const [connectedIntegrations, setConnectedIntegrations] = useState<Integration[]>([]);
 
-  const handleIntegrationComplete = () => {
+  const handleIntegrationComplete = (integrations: Integration[]) => {
+    setConnectedIntegrations(integrations);
     setCurrentView("chat");
   };
 
@@ -52,7 +61,7 @@ const Index = () => {
     
     case "chat":
     default:
-      return <ReviewGenieBot onShowReviewDraft={handleShowReviewDraft} />;
+      return <ReviewGenieBot onShowReviewDraft={handleShowReviewDraft} connectedIntegrations={connectedIntegrations} />;
   }
 };
 

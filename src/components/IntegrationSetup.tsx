@@ -7,7 +7,7 @@ import { CheckCircle, ExternalLink, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface IntegrationSetupProps {
-  onComplete: () => void;
+  onComplete: (integrations: Integration[]) => void;
 }
 
 interface Integration {
@@ -274,13 +274,13 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
                     : "Great start! You can add more tools later to improve review accuracy."
                   }
                 </p>
-                <Button 
-                  size="lg"
-                  onClick={onComplete}
-                  className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
-                >
-                  Continue to Review Process →
-                </Button>
+                 <Button 
+                   size="lg"
+                   onClick={() => onComplete(integrationStates.filter(i => i.status === "connected"))}
+                   className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+                 >
+                   Continue to Review Process →
+                 </Button>
               </CardContent>
             </Card>
           </div>

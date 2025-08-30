@@ -18,24 +18,45 @@ const initialMessages: Message[] = [
 
 interface ReviewGenieBotProps {
   onShowReviewDraft: (employeeName: string) => void;
+  connectedIntegrations?: Array<{
+    id: string;
+    name: string;
+    icon: string;
+    status: "disconnected" | "connecting" | "connected";
+  }>;
 }
 
-export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
+export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }: ReviewGenieBotProps) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [currentStep, setCurrentStep] = useState("welcome");
   const [integrations, setIntegrations] = useState<Array<{
     name: string;
     status: "connected" | "pending" | "error";
     icon: string;
-  }>>([
-    { name: "Slack", status: "connected", icon: "💬" },
-    { name: "Jira", status: "connected", icon: "🎯" },
-    { name: "GitHub", status: "connected", icon: "⚡" }
-  ]);
+  }>>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const { toast } = useToast();
+
+  // Sync integrations from props
+  useEffect(() => {
+    if (connectedIntegrations.length > 0) {
+      const mapped = connectedIntegrations.map(int => ({
+        name: int.name,
+        status: int.status === "connected" ? "connected" as const : "pending" as const,
+        icon: int.icon
+      }));
+      setIntegrations(mapped);
+    } else {
+      // Default integrations when none provided
+      setIntegrations([
+        { name: "Slack", status: "connected", icon: "💬" },
+        { name: "Jira", status: "connected", icon: "🎯" },
+        { name: "GitHub", status: "connected", icon: "⚡" }
+      ]);
+    }
+  }, [connectedIntegrations]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -160,6 +181,20 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
         ]
       });
     });
+
+    // After showing submissions, ask about additional tools
+    setTimeout(() => {
+      simulateTyping(() => {
+        addMessage({
+          type: "bot",
+          content: "💡 **Enhance Analysis Accuracy**\n\nI can provide even more detailed insights by connecting additional workplace tools. Current connected tools provide good coverage, but more data means better analysis.\n\nWould you like to connect more tools before diving deep into the employee analysis?",
+          buttons: [
+            { text: "🔗 Connect More Tools", action: "connect_additional_tools", variant: "outline" },
+            { text: "📊 Proceed with Current Data", action: "proceed_analysis", variant: "default" }
+          ]
+        });
+      }, 1500);
+    }, 3000);
   };
 
   const handleSelectEmployee = () => {
@@ -309,6 +344,15 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
         setCurrentStep("employee");
         handleSelectEmployee();
         break;
+      case "connect_additional_tools":
+        handleConnectTools();
+        break;
+      case "proceed_analysis":
+        addMessage({
+          type: "bot",
+          content: "Great! Proceeding with current connected tools. Please select an employee from the list above to begin detailed analysis.",
+        });
+        break;
       default:
         console.log("Unknown action:", action);
     }
@@ -363,7 +407,7 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
           {messages.map((message) => (
             <ChatMessage
               key={message.id}
@@ -375,11 +419,13 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
         </div>
 
         {/* Input */}
-        <ChatInput 
-          onSendMessage={handleSendMessage}
-          disabled={isTyping}
-          placeholder={isTyping ? "ReviewGenie is typing..." : "Ask me anything about performance reviews..."}
-        />
+        <div className="shrink-0">
+          <ChatInput 
+            onSendMessage={handleSendMessage}
+            disabled={isTyping}
+            placeholder={isTyping ? "ReviewGenie is typing..." : "Ask me anything about performance reviews..."}
+          />
+        </div>
       </div>
     </div>
   );
