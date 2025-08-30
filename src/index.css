@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ReviewGenie Design System - Professional AI Performance Review Platform */
+/* ReviewGenie Chat Bot Design System */
 
 @layer base {
   :root {
-    /* Core brand colors - Professional purple & blue palette */
+    /* ReviewGenie Brand Colors */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -16,16 +16,14 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Primary brand - Deep purple for trust and professionalism */
+    /* Bot theme - professional purple/blue */
     --primary: 259 94% 51%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 259 94% 65%;
 
-    /* Secondary - Elegant gray-blue */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    /* Accent - Vibrant blue for highlights */
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
 
@@ -41,55 +39,40 @@
 
     --radius: 0.75rem;
 
-    /* Beautiful gradients for modern UI */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    /* Chat-specific colors */
+    --chat-bg: 248 100% 99%;
+    --bot-message: 259 94% 51%;
+    --user-message: 210 40% 96.1%;
+    --sidebar-bg: 220 14% 96%;
+    
+    /* Success states */
+    --success: 142 76% 36%;
+    --success-foreground: 355 100% 97%;
+    
+    /* Warning states */
+    --warning: 45 93% 47%;
+    --warning-foreground: 26 83% 14%;
+
+    /* Gradients */
+    --gradient-bot: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
     --gradient-glow: radial-gradient(circle at center, hsl(var(--primary-glow) / 0.15), transparent 70%);
 
-    /* Professional shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
-    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
-    --shadow-card: 0 4px 20px -4px hsl(var(--foreground) / 0.1);
-
-    /* Smooth animations */
+    /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    /* Typography scale */
-    --font-hero: 3.5rem;
-    --font-xl: 2.25rem;
-    --font-lg: 1.5rem;
+    --typing-dots: typing-dots 1.5s infinite;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
     --primary: 259 94% 65%;
     --primary-foreground: 222.2 47.4% 11.2%;
-    --primary-glow: 259 94% 75%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217 91% 70%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 259 94% 65%;
+    --chat-bg: 222.2 84% 4.9%;
+    --sidebar-bg: 217.2 32.6% 17.5%;
+    --bot-message: 259 94% 65%;
+    --user-message: 217.2 32.6% 17.5%;
   }
 }
 
@@ -102,28 +85,45 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
-  /* Custom utility classes for ReviewGenie */
-  .gradient-hero {
-    background: var(--gradient-hero);
+  /* Chat animations */
+  @keyframes typing-dots {
+    0%, 60%, 100% { opacity: 0.3; }
+    30% { opacity: 1; }
   }
 
-  .gradient-glow {
-    background: var(--gradient-glow);
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .shadow-elegant {
-    box-shadow: var(--shadow-elegant);
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
+    50% { box-shadow: 0 0 30px hsl(var(--primary) / 0.5); }
   }
 
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
+  .animate-slide-in {
+    animation: slide-in 0.5s ease-out;
   }
 
-  .transition-smooth {
-    transition: var(--transition-smooth);
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
   }
 
-  .transition-bounce {
-    transition: var(--transition-bounce);
+  .typing-indicator {
+    animation: var(--typing-dots);
+  }
+
+  .typing-indicator:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-indicator:nth-child(3) {
+    animation-delay: 0.4s;
   }
 }

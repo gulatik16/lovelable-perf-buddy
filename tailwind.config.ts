@@ -52,21 +52,28 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
-				}
+				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
+				'chat-bg': 'hsl(var(--chat-bg))',
+				'bot-message': 'hsl(var(--bot-message))',
+				'user-message': 'hsl(var(--user-message))',
+				'sidebar-bg': 'hsl(var(--sidebar-bg))'
 			},
 			backgroundImage: {
-				'gradient-hero': 'var(--gradient-hero)',
-				'gradient-glow': 'var(--gradient-glow)',
-				'gradient-subtle': 'var(--gradient-subtle)'
+				'gradient-bot': 'var(--gradient-bot)',
+				'gradient-glow': 'var(--gradient-glow)'
 			},
-			boxShadow: {
-				'elegant': 'var(--shadow-elegant)',
-				'glow': 'var(--shadow-glow)',
-				'card': 'var(--shadow-card)'
-			},
-			fontSize: {
-				'hero': 'var(--font-hero)',
-				'display': 'var(--font-xl)'
+			animation: {
+				'slide-in': 'slide-in 0.5s ease-out',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'typing-dots': 'typing-dots 1.5s infinite'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
