@@ -8,10 +8,10 @@ const initialMessages: Message[] = [
   {
     id: "1",
     type: "bot",
-    content: "👋 Hello! I'm ReviewGenie, your AI-powered performance review assistant.\n\nI can see you have tools connected and I'm already gathering performance signals from your integrated platforms.\n\nWhich employee would you like me to create a review for?",
+    content: "👋 Hello! I'm ReviewGenie, your AI-powered performance review assistant.\n\nI can see you have tools connected and I'm analyzing your work signals to create your performance review draft.\n\nLet me gather your achievements and contributions from the past 90 days...",
     timestamp: new Date(),
     buttons: [
-      { text: "📋 Select Employee", action: "select_employee", variant: "default" }
+      { text: "🔍 Analyze My Work", action: "analyze_work", variant: "default" }
     ]
   }
 ];
@@ -211,6 +211,28 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
 
   const handleButtonClick = (action: string) => {
     switch (action) {
+      case "analyze_work":
+        setCurrentStep("analyzing");
+        simulateTyping(() => {
+          addMessage({
+            type: "bot",
+            content: "🔍 Analyzing your work signals from connected tools...\n\n📊 Processing communication patterns...\n🎯 Evaluating project contributions...\n👥 Assessing collaboration metrics...\n\nThis will take just a moment...",
+          });
+        });
+
+        setTimeout(() => {
+          simulateTyping(() => {
+            addMessage({
+              type: "bot",
+              content: "🎉 Analysis complete! Here's what I found about your performance:\n\n📈 **Key Metrics (90 days):**\n• 47 commits to GitHub\n• 23 Jira tickets completed\n• 156 meaningful Slack interactions\n• 12 code reviews participated\n• 8 meetings led\n\n🌟 **Strengths Identified:**\n• Consistent delivery quality\n• Strong collaboration patterns\n• Proactive communication\n• Technical leadership\n\nReady to generate your performance review draft?",
+              buttons: [
+                { text: "Generate My Review", action: "generate_review", variant: "default" },
+                { text: "View Detailed Signals", action: "view_signals", variant: "outline" }
+              ]
+            });
+          }, 3000);
+        }, 4000);
+        break;
       case "connect_tools":
         handleConnectTools();
         break;
@@ -245,7 +267,7 @@ export const ReviewGenieBot = ({ onShowReviewDraft }: ReviewGenieBotProps) => {
         handleSelectSpecificEmployee("Alex Rivera");
         break;
       case "view_draft":
-        onShowReviewDraft(selectedEmployee);
+        onShowReviewDraft("Your Review");
         break;
       case "generate_review":
         handleGenerateReview();

@@ -110,8 +110,8 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                I'm your AI-powered performance review assistant. I'll help you create comprehensive, 
-                data-driven performance reviews by analyzing workplace signals from your favorite tools.
+                I'm your AI-powered performance review assistant. I'll analyze your work signals 
+                and help you create a comprehensive performance review draft to get started.
               </p>
             </div>
 
@@ -121,19 +121,19 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Analyze 90 days of workplace activity</span>
+                    <span>Analyze your 90 days of work activity</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Identify collaboration patterns & contributions</span>
+                    <span>Generate your performance review draft</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Generate comprehensive review drafts</span>
+                    <span>Identify your key achievements & contributions</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Provide objective, data-backed insights</span>
+                    <span>Help you showcase your work effectively</span>
                   </div>
                 </div>
               </CardContent>
@@ -141,8 +141,8 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
 
             <div className="space-y-4">
               <p className="text-muted-foreground">
-                Let's start by connecting your workplace tools. This allows me to gather the signals 
-                needed to create meaningful performance reviews.
+                Let's start by connecting your workplace tools. This allows me to analyze your work 
+                and create a personalized performance review draft.
               </p>
               
               <Button 

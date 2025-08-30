@@ -103,7 +103,7 @@ export const ReviewDraft = ({ employeeName, onSubmit, onBack }: ReviewDraftProps
   const handleSubmitReview = () => {
     toast({
       title: "Review Submitted!",
-      description: "Performance review has been submitted to HR for final approval.",
+      description: "Your performance review has been submitted to your manager for evaluation.",
     });
     onSubmit();
   };
@@ -113,7 +113,7 @@ export const ReviewDraft = ({ employeeName, onSubmit, onBack }: ReviewDraftProps
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Performance Review Draft</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Your Performance Review Draft</h1>
           <div className="flex items-center gap-4 flex-wrap">
             <Badge variant="outline" className="text-sm">{employeeName}</Badge>
             <Badge variant="outline" className="text-sm">Software Engineer</Badge>
@@ -246,7 +246,7 @@ export const ReviewDraft = ({ employeeName, onSubmit, onBack }: ReviewDraftProps
             
             <Button onClick={handleSubmitReview} className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 flex items-center gap-2">
               <Send className="h-4 w-4" />
-              Submit Review
+              Submit My Review
             </Button>
           </div>
         </div>
