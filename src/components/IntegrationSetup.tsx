@@ -105,9 +105,9 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
             </div>
             
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Welcome to ReviewGenie! 🎉
-              </h1>
+               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                 ReviewGenie for Managers 🎯
+               </h1>
               
               <p className="text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
                 I'm your AI-powered performance review assistant for managers. I'll analyze your team's work signals 
