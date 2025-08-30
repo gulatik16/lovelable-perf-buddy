@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* ReviewGenie Brand Colors */
+    /* ReviewGenie Brand Colors - Fixed HSL values */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -39,7 +39,7 @@
 
     --radius: 0.75rem;
 
-    /* Chat-specific colors */
+    /* Chat-specific colors - Fixed HSL */
     --chat-bg: 248 100% 99%;
     --bot-message: 259 94% 51%;
     --user-message: 210 40% 96.1%;
