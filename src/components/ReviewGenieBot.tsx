@@ -8,11 +8,10 @@ const initialMessages: Message[] = [
   {
     id: "1",
     type: "bot",
-    content: "👋 Hello! I'm ReviewGenie, your AI-powered performance review assistant.\n\nI'll help you create comprehensive performance reviews by gathering data from your connected tools and generating intelligent insights.\n\nLet's get started! First, I'll need to connect to your workplace tools.",
+    content: "👋 Hello! I'm ReviewGenie, your AI-powered performance review assistant.\n\nI can see you have tools connected and I'm already gathering performance signals from your integrated platforms.\n\nWhich employee would you like me to create a review for?",
     timestamp: new Date(),
     buttons: [
-      { text: "Connect Tools", action: "connect_tools", variant: "default" },
-      { text: "Learn More", action: "learn_more", variant: "outline" }
+      { text: "📋 Select Employee", action: "select_employee", variant: "default" }
     ]
   }
 ];

@@ -1,19 +1,26 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { CheckCircle, Edit3, Save, X, Send, Download, Eye } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Star, Users, TrendingUp, Edit2, Save, X, ArrowLeft, Eye, Download, FileText, Send, User, BarChart3, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+interface DataSource {
+  platform: string;
+  type: string;
+  points: number;
+  confidence: string;
+}
 
 interface ReviewSection {
   id: string;
   title: string;
   content: string;
   editable: boolean;
+  score?: string;
+  scoreNote?: string;
+  dataSources?: DataSource[];
 }
 
 interface ReviewDraftProps {
@@ -22,70 +29,81 @@ interface ReviewDraftProps {
   onBack: () => void;
 }
 
+const initialSections: ReviewSection[] = [
+  {
+    id: "achievements",
+    title: "Key Achievements",
+    content: `• Led the Q4 product redesign initiative, resulting in 25% improved user satisfaction scores
+• Successfully delivered 3 major features ahead of schedule, including the new dashboard analytics
+• Mentored 2 junior developers, helping them achieve promotion milestones
+• Contributed to 15% reduction in bug reports through improved code review practices`,
+    editable: true,
+    score: "4.6/5",
+    scoreNote: "15% above team average",
+    dataSources: [
+      { platform: "Jira", type: "Story completion", points: 23, confidence: "94%" },
+      { platform: "GitHub", type: "Code reviews", points: 47, confidence: "89%" },
+      { platform: "Slack", type: "Mentoring messages", points: 156, confidence: "92%" }
+    ]
+  },
+  {
+    id: "collaboration", 
+    title: "Collaboration & Teamwork",
+    content: `• Consistently maintains high engagement in team discussions (top 20% in Slack participation)
+• Provides constructive feedback in code reviews with 95% approval rating
+• Actively participates in cross-functional meetings and design sessions
+• Shows strong communication skills in both technical and non-technical contexts`,
+    editable: true,
+    score: "4.4/5",
+    scoreNote: "Top 20% of team",
+    dataSources: [
+      { platform: "Slack", type: "Message engagement", points: 342, confidence: "96%" },
+      { platform: "GitHub", type: "PR comments", points: 89, confidence: "91%" },
+      { platform: "Notion", type: "Doc collaborations", points: 28, confidence: "88%" }
+    ]
+  },
+  {
+    id: "growth",
+    title: "Growth Areas & Development", 
+    content: `• Focus on expanding technical leadership skills for senior role preparation
+• Opportunity to increase involvement in architectural decision-making
+• Consider leading more complex projects to build strategic planning experience
+• Recommended: Complete advanced React patterns course Q1 2025`,
+    editable: true,
+    score: "3.8/5",
+    scoreNote: "Strong growth trajectory",
+    dataSources: [
+      { platform: "Peer Feedback", type: "Growth suggestions", points: 3, confidence: "87%" }
+    ]
+  }
+];
+
 export const ReviewDraft = ({ employeeName, onSubmit, onBack }: ReviewDraftProps) => {
+  const [sections, setSections] = useState<ReviewSection[]>(initialSections);
+  const [editingSection, setEditingSection] = useState<string | null>(null);
+  const [overallRating] = useState("4.2/5");
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState<string | null>(null);
-  const [reviewSections, setReviewSections] = useState<ReviewSection[]>([
-    {
-      id: "achievements",
-      title: "Key Achievements",
-      content: `${employeeName} has delivered exceptional results this quarter:\n\n• Successfully led the implementation of the new user dashboard, improving user engagement by 35%\n• Completed 23 Jira tickets with zero critical bugs, maintaining a 98% quality score\n• Mentored 2 junior developers, contributing to team knowledge sharing\n• Contributed to 47 GitHub commits with consistent code quality and thorough documentation\n• Proactively identified and resolved 3 critical performance bottlenecks`,
-      editable: false
-    },
-    {
-      id: "collaboration",
-      title: "Collaboration & Communication",
-      content: `${employeeName} demonstrates strong collaborative skills:\n\n• Actively participates in daily standups and sprint planning (156 Slack messages analyzed)\n• Provides constructive feedback in 12 code reviews, fostering team learning\n• Facilitates knowledge sharing through clear documentation and pair programming\n• Responds promptly to team requests and maintains positive communication tone\n• Successfully coordinated with design and product teams on 3 major features`,
-      editable: false
-    },
-    {
-      id: "growth",
-      title: "Growth Areas & Development",
-      content: `Areas for continued professional development:\n\n• Consider taking on technical leadership opportunities for larger initiatives\n• Expand involvement in architecture decisions and system design discussions\n• Explore opportunities to present technical topics at team meetings or external conferences\n• Develop expertise in emerging technologies relevant to our tech stack\n• Continue building cross-functional collaboration skills with product and design teams`,
-      editable: false
-    }
-  ]);
 
-  const [overallRating, setOverallRating] = useState("Exceeds Expectations");
-  const [isEditingRating, setIsEditingRating] = useState(false);
-
-  const handleEditSection = (sectionId: string) => {
-    setIsEditing(sectionId);
-    setReviewSections(prev =>
-      prev.map(section =>
-        section.id === sectionId ? { ...section, editable: true } : section
-      )
-    );
-  };
-
-  const handleSaveSection = (sectionId: string, newContent: string) => {
-    setReviewSections(prev =>
-      prev.map(section =>
+  const handleSaveEdit = (sectionId: string, newContent: string) => {
+    setSections(prev => 
+      prev.map(section => 
         section.id === sectionId 
-          ? { ...section, content: newContent, editable: false }
+          ? { ...section, content: newContent }
           : section
       )
     );
-    setIsEditing(null);
+    setEditingSection(null);
+    
     toast({
       title: "Section Updated",
-      description: "Your changes have been saved successfully.",
+      description: "Your changes have been saved to the review draft.",
     });
-  };
-
-  const handleCancelEdit = (sectionId: string) => {
-    setReviewSections(prev =>
-      prev.map(section =>
-        section.id === sectionId ? { ...section, editable: false } : section
-      )
-    );
-    setIsEditing(null);
   };
 
   const handleSubmitReview = () => {
     toast({
-      title: "Review Submitted Successfully! 🎉",
-      description: `Performance review for ${employeeName} has been submitted to HR and the employee.`,
+      title: "Review Submitted!",
+      description: "Performance review has been submitted to HR for final approval.",
     });
     onSubmit();
   };
@@ -94,163 +112,150 @@ export const ReviewDraft = ({ employeeName, onSubmit, onBack }: ReviewDraftProps
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" onClick={onBack} className="mb-4">
-            ← Back to Chat
-          </Button>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Performance Review Draft</h1>
+          <div className="flex items-center gap-4 flex-wrap">
+            <Badge variant="outline" className="text-sm">{employeeName}</Badge>
+            <Badge variant="outline" className="text-sm">Software Engineer</Badge>
+            <Badge variant="outline" className="text-sm">Q4 2024</Badge>
+            <Badge className="bg-green-100 text-green-800 border-green-200 ml-auto">
+              AI Generated
+            </Badge>
+          </div>
         </div>
 
-        {/* Bot Notification */}
-        <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 animate-fade-in">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-accent">
-                <AvatarFallback className="bg-gradient-to-r from-primary to-accent text-white font-bold">
-                  RG
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-semibold text-lg">ReviewGenie</h3>
-                  <Badge className="bg-success text-success-foreground">
-                    <CheckCircle className="w-3 h-3 mr-1" />
-                    Ready
-                  </Badge>
+        {/* Review Sections */}
+        <div className="space-y-6">
+          {sections.map((section) => (
+            <div key={section.id} className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                  {section.id === "achievements" && <Star className="h-5 w-5 text-yellow-500" />}
+                  {section.id === "collaboration" && <Users className="h-5 w-5 text-blue-500" />}
+                  {section.id === "growth" && <TrendingUp className="h-5 w-5 text-green-500" />}
+                  {section.title}
+                </h2>
+                {section.editable && !editingSection && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setEditingSection(section.id)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+
+              {editingSection === section.id ? (
+                <EditableSection
+                  content={section.content}
+                  onSave={(newContent) => handleSaveEdit(section.id, newContent)}
+                  onCancel={() => setEditingSection(null)}
+                />
+              ) : (
+                <div className="bg-card border rounded-lg p-6 space-y-4">
+                  <div className="prose prose-sm max-w-none">
+                    {section.content.split('\n').map((line, index) => (
+                      <p key={index} className="text-foreground mb-2 last:mb-0">
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                  
+                  {section.score && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <BarChart3 className="h-4 w-4 text-primary" />
+                      <span className="font-medium">Score: {section.score}</span>
+                      <span className="text-muted-foreground">• {section.scoreNote}</span>
+                    </div>
+                  )}
+
+                  {section.dataSources && section.dataSources.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Info className="h-4 w-4" />
+                        <span>Data Sources</span>
+                      </div>
+                      <div className="space-y-1">
+                        {section.dataSources.map((source, index) => (
+                          <div key={index} className="flex items-center justify-between text-sm bg-muted/30 rounded p-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{source.platform}</span>
+                              <span className="text-muted-foreground">• {source.type}</span>
+                            </div>
+                            <div className="flex items-center gap-4 text-xs">
+                              <span>{source.points} data points</span>
+                              <span className="text-green-600">{source.confidence} confidence</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <p className="text-muted-foreground">
-                  🎉 <strong>Your draft review is ready!</strong> I've analyzed 90 days of workplace data 
-                  and generated a comprehensive performance review for {employeeName}. Review the content below 
-                  and make any edits before submitting.
-                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Overall Rating */}
+        <Card className="bg-primary/5 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              Overall Performance Rating
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-3xl font-bold text-primary">{overallRating}</div>
+                <p className="text-sm text-muted-foreground">Based on comprehensive data analysis</p>
+              </div>
+              <div className="text-right">
+                <Badge className="mb-1">Strong Performer</Badge>
+                <p className="text-xs text-muted-foreground">Exceeds expectations</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Employee Header */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl">{employeeName} - Performance Review</CardTitle>
-                <CardDescription>Q4 2024 • Generated by ReviewGenie AI</CardDescription>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-sm text-muted-foreground">Overall Rating</div>
-                  {isEditingRating ? (
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        value={overallRating}
-                        onChange={(e) => setOverallRating(e.target.value)}
-                        className="w-40 h-8"
-                      />
-                      <Button size="sm" onClick={() => setIsEditingRating(false)}>
-                        <Save className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Badge variant="default" className="text-sm">
-                        {overallRating}
-                      </Badge>
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
-                        onClick={() => setIsEditingRating(true)}
-                      >
-                        <Edit3 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-
-        {/* Review Sections */}
-        <div className="space-y-6">
-          {reviewSections.map((section) => (
-            <Card key={section.id} className="relative">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{section.title}</CardTitle>
-                  {!section.editable && isEditing !== section.id && (
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => handleEditSection(section.id)}
-                    >
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      Edit
-                    </Button>
-                  )}
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                {section.editable && isEditing === section.id ? (
-                  <EditableSection
-                    content={section.content}
-                    onSave={(newContent) => handleSaveSection(section.id, newContent)}
-                    onCancel={() => handleCancelEdit(section.id)}
-                  />
-                ) : (
-                  <div className="prose prose-sm max-w-none">
-                    <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-foreground">
-                      {section.content}
-                    </pre>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
         {/* Action Buttons */}
         <div className="flex items-center justify-between pt-6 border-t">
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm">
-              <Eye className="w-4 h-4 mr-2" />
-              Preview
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Download PDF
-            </Button>
-          </div>
+          <Button variant="outline" onClick={onBack} className="flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Chat
+          </Button>
           
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={onBack}>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Eye className="h-4 w-4" />
+              Preview
+            </Button>
+            
+            <Button variant="outline" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Download PDF
+            </Button>
+            
+            <Button variant="secondary" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
               Save as Draft
             </Button>
-            <Button 
-              onClick={handleSubmitReview}
-              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
-            >
-              <Send className="w-4 h-4 mr-2" />
+            
+            <Button onClick={handleSubmitReview} className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 flex items-center gap-2">
+              <Send className="h-4 w-4" />
               Submit Review
             </Button>
           </div>
         </div>
-
-        {/* Data Sources */}
-        <Card className="bg-muted/50">
-          <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">
-              <strong>Data Sources:</strong> This review was generated using data from Slack (156 messages), 
-              Jira (23 tickets), GitHub (47 commits), and Notion (12 documents) spanning the last 90 days.
-              <Separator className="my-2" />
-              <strong>AI Confidence:</strong> 94% • Generated on {new Date().toLocaleDateString()}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
 };
 
+// Helper component for editing sections
 interface EditableSectionProps {
   content: string;
   onSave: (content: string) => void;
@@ -258,24 +263,23 @@ interface EditableSectionProps {
 }
 
 const EditableSection = ({ content, onSave, onCancel }: EditableSectionProps) => {
-  const [editedContent, setEditedContent] = useState(content);
+  const [editContent, setEditContent] = useState(content);
 
   return (
     <div className="space-y-4">
       <Textarea
-        value={editedContent}
-        onChange={(e) => setEditedContent(e.target.value)}
-        rows={8}
-        className="resize-none"
-        placeholder="Enter review content..."
+        value={editContent}
+        onChange={(e) => setEditContent(e.target.value)}
+        className="min-h-[120px] resize-none"
+        placeholder="Edit section content..."
       />
       <div className="flex items-center gap-2">
-        <Button size="sm" onClick={() => onSave(editedContent)}>
-          <Save className="w-4 h-4 mr-2" />
-          Save Changes
+        <Button size="sm" onClick={() => onSave(editContent)} className="flex items-center gap-1">
+          <Save className="h-3 w-3" />
+          Save
         </Button>
-        <Button size="sm" variant="outline" onClick={onCancel}>
-          <X className="w-4 h-4 mr-2" />
+        <Button size="sm" variant="outline" onClick={onCancel} className="flex items-center gap-1">
+          <X className="h-3 w-3" />
           Cancel
         </Button>
       </div>

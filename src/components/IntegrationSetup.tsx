@@ -88,7 +88,7 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
   };
 
   const connectedCount = integrationStates.filter(i => i.status === "connected").length;
-  const allConnected = connectedCount === integrations.length;
+  const canProceed = connectedCount >= 1;
 
   if (currentStep === "intro") {
     return (
@@ -181,10 +181,10 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
             <Badge variant="secondary" className="px-4 py-2">
               {connectedCount} of {integrations.length} connected
             </Badge>
-            {allConnected && (
+            {canProceed && (
               <Badge className="px-4 py-2 bg-success text-success-foreground">
                 <CheckCircle className="w-4 h-4 mr-1" />
-                All tools connected!
+                Ready to proceed!
               </Badge>
             )}
           </div>
@@ -262,21 +262,24 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
         </div>
 
         {/* Continue Button */}
-        {allConnected && (
+        {canProceed && (
           <div className="text-center space-y-4 animate-fade-in">
             <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 max-w-md mx-auto">
               <CardContent className="p-6 text-center">
                 <CheckCircle className="w-12 h-12 text-success mx-auto mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Perfect! All tools connected</h3>
+                <h3 className="font-semibold text-lg mb-2">{connectedCount} tool{connectedCount > 1 ? 's' : ''} connected!</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  ReviewGenie can now access your workplace data to generate comprehensive performance reviews.
+                  {connectedCount === integrations.length 
+                    ? "All tools connected! ReviewGenie can now access comprehensive workplace data."
+                    : "Great start! You can add more tools later to improve review accuracy."
+                  }
                 </p>
                 <Button 
                   size="lg"
                   onClick={onComplete}
                   className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
                 >
-                  Start Creating Reviews →
+                  Continue to Review Process →
                 </Button>
               </CardContent>
             </Card>
