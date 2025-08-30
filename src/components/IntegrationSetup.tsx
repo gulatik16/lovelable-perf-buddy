@@ -3,14 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { CheckCircle, ExternalLink, Loader2, User, UserCheck } from "lucide-react";
+import { CheckCircle, ExternalLink, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface IntegrationSetupProps {
   onComplete: () => void;
 }
-
-type UserType = "employee" | "manager" | null;
 
 interface Integration {
   id: string;
@@ -57,14 +55,9 @@ const integrations: Integration[] = [
 ];
 
 export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
-  const [userType, setUserType] = useState<UserType>(null);
   const [integrationStates, setIntegrationStates] = useState<Integration[]>(integrations);
   const [currentStep, setCurrentStep] = useState("intro");
   const { toast } = useToast();
-
-  const handleUserTypeSelection = (type: UserType) => {
-    setUserType(type);
-  };
 
   const handleConnect = async (integrationId: string) => {
     // Update status to connecting
@@ -97,64 +90,6 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
   const connectedCount = integrationStates.filter(i => i.status === "connected").length;
   const canProceed = connectedCount >= 1;
 
-  // User type selection screen
-  if (userType === null) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6 flex items-center justify-center">
-        <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-4">
-            ReviewGenie - Performance Review Platform
-          </h1>
-          <p className="text-lg text-muted-foreground mb-8">
-            Choose your role to get started
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => handleUserTypeSelection("employee")}>
-              <CardContent className="p-8 text-center">
-                <User className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Employee</h3>
-                <p className="text-muted-foreground">
-                  Connect your work tools to generate an AI-powered performance review draft
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="cursor-pointer hover:border-muted-foreground/50 transition-colors opacity-75">
-              <CardContent className="p-8 text-center">
-                <UserCheck className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-muted-foreground">Manager / HR</h3>
-                <p className="text-muted-foreground text-sm">
-                  Review employee submissions and insights (coming soon - contact admin for access)
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Manager/HR blocked screen
-  if (userType === "manager") {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6 flex items-center justify-center">
-        <div className="max-w-2xl mx-auto text-center">
-          <UserCheck className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
-          <h1 className="text-2xl font-bold text-foreground mb-4">
-            Manager Dashboard Access
-          </h1>
-          <p className="text-lg text-muted-foreground mb-6">
-            You'll be able to access the manager dashboard to review employee submissions and AI insights once employees have completed their reviews.
-          </p>
-          <Button variant="outline" onClick={() => setUserType(null)}>
-            Back to Role Selection
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   if (currentStep === "intro") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-6">
@@ -175,30 +110,30 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                I'm your AI-powered performance review assistant. I'll analyze your work signals 
-                and help you create a comprehensive performance review draft to get started.
+                I'm your AI-powered performance review assistant for managers. I'll analyze your team's work signals 
+                and help you generate comprehensive performance insights and reviews.
               </p>
             </div>
 
             <Card className="bg-primary/5 border-primary/20 max-w-lg mx-auto">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-lg mb-3">What I'll do for you:</h3>
+                <h3 className="font-semibold text-lg mb-3">What I'll help you with:</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Analyze your 90 days of work activity</span>
+                    <span>Analyze your team's work patterns and performance signals</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Generate your performance review draft</span>
+                    <span>Generate comprehensive performance insights</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Identify your key achievements & contributions</span>
+                    <span>Identify key achievements and growth areas</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-success" />
-                    <span>Help you showcase your work effectively</span>
+                    <span>Create data-driven performance reviews</span>
                   </div>
                 </div>
               </CardContent>
@@ -206,8 +141,8 @@ export const IntegrationSetup = ({ onComplete }: IntegrationSetupProps) => {
 
             <div className="space-y-4">
               <p className="text-muted-foreground">
-                Let's start by connecting your workplace tools. This allows me to analyze your work 
-                and create a personalized performance review draft.
+                Let's start by connecting your workplace tools. This allows me to analyze your team's work patterns 
+                and generate comprehensive performance insights for better reviews.
               </p>
               
               <Button 
