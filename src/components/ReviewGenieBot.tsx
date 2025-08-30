@@ -181,20 +181,6 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
         ]
       });
     });
-
-    // After showing submissions, ask about additional tools
-    setTimeout(() => {
-      simulateTyping(() => {
-        addMessage({
-          type: "bot",
-          content: "💡 **Enhance Analysis Accuracy**\n\nI can provide even more detailed insights by connecting additional workplace tools. Current connected tools provide good coverage, but more data means better analysis.\n\nWould you like to connect more tools before diving deep into the employee analysis?",
-          buttons: [
-            { text: "🔗 Connect More Tools", action: "connect_additional_tools", variant: "outline" },
-            { text: "📊 Proceed with Current Data", action: "proceed_analysis", variant: "default" }
-          ]
-        });
-      }, 1500);
-    }, 3000);
   };
 
   const handleSelectEmployee = () => {
@@ -230,13 +216,27 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
       simulateTyping(() => {
         addMessage({
           type: "bot",
-          content: `🎉 Analysis complete! Here's what I found for ${employee}:\n\n📈 **Key Metrics (90 days):**\n• 47 commits to GitHub\n• 23 Jira tickets completed\n• 156 Slack messages\n• 12 code reviews participated\n• 8 meetings led\n\n🌟 **Strengths Identified:**\n• Consistent code quality\n• Strong collaboration\n• Proactive communication\n• Timely deliveries\n\nReady to generate the performance review draft?`,
+          content: `🎉 Analysis complete! Here's what I found for ${employee}:\n\n📈 **Key Metrics (90 days):**\n• 47 commits to GitHub\n• 23 Jira tickets completed\n• 156 Slack messages\n• 12 code reviews participated\n• 8 meetings led\n\n🌟 **Strengths Identified:**\n• Consistent code quality\n• Strong collaboration\n• Proactive communication\n• Timely deliveries`,
           buttons: [
             { text: "Generate Review", action: "generate_review", variant: "default" },
             { text: "View Detailed Signals", action: "view_signals", variant: "outline" }
           ]
         });
       }, 3000);
+      
+      // After showing insights, ask about connecting more tools
+      setTimeout(() => {
+        simulateTyping(() => {
+          addMessage({
+            type: "bot",
+            content: "💡 **Enhance Analysis Further?**\n\nI can provide even more detailed insights by connecting additional workplace tools. Would you like to connect more tools for deeper analysis, or is this current analysis sufficient?",
+            buttons: [
+              { text: "🔗 Connect More Tools", action: "connect_additional_tools", variant: "outline" },
+              { text: "✅ This Analysis is Good", action: "proceed_with_review", variant: "default" }
+            ]
+          });
+        }, 1500);
+      }, 2000);
     }, 4000);
   };
 
@@ -351,6 +351,15 @@ export const ReviewGenieBot = ({ onShowReviewDraft, connectedIntegrations = [] }
         addMessage({
           type: "bot",
           content: "Great! Proceeding with current connected tools. Please select an employee from the list above to begin detailed analysis.",
+        });
+        break;
+      case "proceed_with_review":
+        addMessage({
+          type: "bot",
+          content: "Perfect! The current analysis provides comprehensive insights. Ready to generate the performance review draft?",
+          buttons: [
+            { text: "Generate Review", action: "generate_review", variant: "default" }
+          ]
         });
         break;
       default:
