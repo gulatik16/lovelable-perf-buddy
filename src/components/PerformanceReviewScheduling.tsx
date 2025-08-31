@@ -21,7 +21,7 @@ export const PerformanceReviewScheduling = ({
   const [meetingDate, setMeetingDate] = useState("");
   const [meetingTime, setMeetingTime] = useState("");
   const [message, setMessage] = useState(
-    `Hi ${employeeName},\n\nYour performance review has been completed and approved. I'd like to schedule a meeting to discuss the AI-generated insights and review your self-submitted feedback.\n\nPlease confirm your availability for the proposed time, or suggest an alternative that works better for you.\n\nBest regards`
+    `Hi ${employeeName},\n\nYour performance review has been completed and approved. I'd like to schedule a meeting to discuss the review in detail and share some insights from my end.\n\nPlease confirm your availability for the proposed time, or suggest an alternative that works better for you.\n\nBest regards`
   );
   const [isNotificationSent, setIsNotificationSent] = useState(false);
   const { toast } = useToast();
@@ -148,9 +148,9 @@ export const PerformanceReviewScheduling = ({
             <div className="bg-muted/50 p-4 rounded-lg">
               <h4 className="font-medium mb-2">Meeting Agenda</h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Review AI-generated performance insights</li>
-                <li>• Discuss employee's self-submitted feedback</li>
-                <li>• Set goals and development plans</li>
+                <li>• Review performance insights and observations</li>
+                <li>• Discuss your self-submitted feedback in detail</li>
+                <li>• Set goals and development plans for the upcoming period</li>
                 <li>• Address any questions or concerns</li>
               </ul>
             </div>
