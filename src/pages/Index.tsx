@@ -2,10 +2,10 @@ import { useState } from "react";
 import { ReviewGenieBot } from "@/components/ReviewGenieBot";
 import { IntegrationSetup } from "@/components/IntegrationSetup";
 import { ReviewDraft } from "@/components/ReviewDraft";
-import { HRDashboard } from "@/components/HRDashboard";
+import { PerformanceReviewScheduling } from "@/components/PerformanceReviewScheduling";
 import { ReviewCycle } from "@/types/ReviewCycle";
 
-type ViewType = "integration" | "chat" | "review" | "hr_dashboard";
+type ViewType = "integration" | "chat" | "review" | "scheduling";
 
 interface Integration {
   id: string;
@@ -35,10 +35,10 @@ const Index = () => {
   };
 
   const handleSubmitReview = () => {
-    setCurrentView("hr_dashboard");
+    setCurrentView("scheduling");
   };
 
-  const handleHRApprove = () => {
+  const handleSchedulingComplete = () => {
     setCurrentView("chat");
   };
 
@@ -56,8 +56,14 @@ const Index = () => {
         />
       );
     
-    case "hr_dashboard":
-      return <HRDashboard onApproveReview={handleHRApprove} />;
+    case "scheduling":
+      return (
+        <PerformanceReviewScheduling 
+          employeeName={selectedEmployee}
+          onComplete={handleSchedulingComplete}
+          onBack={handleBackToChat}
+        />
+      );
     
     case "chat":
     default:
