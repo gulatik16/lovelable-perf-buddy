@@ -3,10 +3,9 @@ import { ReviewGenieBot } from "@/components/ReviewGenieBot";
 import { IntegrationSetup } from "@/components/IntegrationSetup";
 import { ReviewDraft } from "@/components/ReviewDraft";
 import { PerformanceReviewScheduling } from "@/components/PerformanceReviewScheduling";
-import { PitchDeck } from "@/components/PitchDeck";
 import { ReviewCycle } from "@/types/ReviewCycle";
 
-type ViewType = "integration" | "chat" | "review" | "scheduling" | "pitch";
+type ViewType = "integration" | "chat" | "review" | "scheduling";
 
 interface Integration {
   id: string;
@@ -16,7 +15,7 @@ interface Integration {
 }
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<ViewType>("pitch");
+  const [currentView, setCurrentView] = useState<ViewType>("integration");
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [reviewCycle, setReviewCycle] = useState<ReviewCycle | null>(null);
   const [connectedIntegrations, setConnectedIntegrations] = useState<Integration[]>([]);
@@ -45,9 +44,6 @@ const Index = () => {
 
   // Route to appropriate view
   switch (currentView) {
-    case "pitch":
-      return <PitchDeck />;
-    
     case "integration":
       return <IntegrationSetup onComplete={handleIntegrationComplete} />;
     
