@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Zap, Users, TrendingUp, ArrowRight } from 'lucide-react';
+import { PDFExport } from './PDFExport';
 
 const slides = [
   {
@@ -17,9 +18,6 @@ const slides = [
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Identifying an impactful AI use case where workflow automation can meaningfully improve the HR team and employee experience
           </p>
-          <div className="text-sm text-muted-foreground font-medium">
-            Product Management Take-Home Assessment
-          </div>
         </div>
       </div>
     )
@@ -295,6 +293,7 @@ export const PitchDeck = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
+      <PDFExport />
       <div className="w-full max-w-4xl">
         <Card className="min-h-[600px] border-0 shadow-2xl">
           <CardContent className="p-12">
@@ -313,7 +312,7 @@ export const PitchDeck = () => {
               </div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between mt-8">
+              <div className="flex items-center justify-between mt-8" data-pdf-hide>
                 <Button 
                   variant="outline" 
                   onClick={prevSlide}
@@ -349,7 +348,7 @@ export const PitchDeck = () => {
               </div>
 
               {/* Slide counter */}
-              <div className="text-center mt-4 text-sm text-muted-foreground">
+              <div className="text-center mt-4 text-sm text-muted-foreground" data-pdf-hide>
                 {currentSlide + 1} of {slides.length}
               </div>
             </div>
