@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Zap, Users, TrendingUp, ArrowRight } from 'lucide-react';
-import { PDFExport } from './PDFExport';
 
 const slides = [
   {
     id: 1,
     title: "AI-Driven Performance Review Automation",
-    subtitle: "Product Problem Statement",
+    subtitle: "Transforming HR workflows with intelligent automation",
     content: (
       <div className="text-center space-y-8">
         <div className="w-24 h-24 bg-gradient-to-br from-primary to-primary/60 rounded-2xl mx-auto flex items-center justify-center">
@@ -293,7 +292,6 @@ export const PitchDeck = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
-      <PDFExport />
       <div className="w-full max-w-4xl">
         <Card className="min-h-[600px] border-0 shadow-2xl">
           <CardContent className="p-12">
